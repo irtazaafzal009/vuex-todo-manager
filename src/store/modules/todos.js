@@ -16,11 +16,23 @@ const actions = {
     async addTodo({commit}, title){
        const response = await axios.post('https://jsonplaceholder.typicode.com/todos', {title, completed:false});
         commit('newTodo', response.data);
+    },
+    async deleteTodo({commit}, id){
+        await axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`);
+        commit('removeTodo', id);
+    },
+    async filterTodos({commit}, e){
+        // getting selected number
+        const limit = parseInt(e.target.options[e.target.options.selectedIndex].innerText);
+        const response  = await axios.get(`https://jsonplaceholder.typicode.com/todos?_limit=${limit}`);
+        commit('setTodos', response.data)
     }
 };
 const mutations = {
     setTodos: (state, todos) => (state.todos = todos),
-    newTodo: (state, todo) => state.todos.unshift(todo)
+    newTodo: (state, todo) => state.todos.unshift(todo),
+    removeTodo: (state, id) =>
+    (state.todos = state.todos.filter(todo => todo.id !== id)),
 };
 
 export default {
