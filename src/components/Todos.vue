@@ -1,27 +1,55 @@
 <template>
-    <div>
-        <h2>Todos</h2>
-        <div class="todos">
-            <div v-for="todo in allTodos" :key="todo.id" class="todo"> 
-              {{ todo.title }}
-              <i @click="deleteTodo(todo.id)" class="fas fa-trash-alt"></i> 
-            </div>
-        </div>
+  <div>
+    <h3>Todos</h3>
+    <div class="legend">
+      <span>Double click to mark as complete</span>
+      <span>
+        <span class="incomplete-box"></span> = Incomplete
+      </span>
+      <span>
+        <span class="complete-box"></span> = Complete
+      </span>
     </div>
+    <div class="todos">
+      <div
+        @dblclick="onDblClick(todo)"
+        v-for="todo in allTodos"
+        :key="todo.id"
+        class="todo"
+        v-bind:class="{'is-complete':todo.completed}"
+      >
+        {{ todo.title }}
+            <div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button_count" data-size="small">
+              <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" ><i class="fas fa-share-alt shi"></i></a>
+            </div>
+        <i @click="deleteTodo(todo.id)" class="fas fa-trash-alt"></i>
+      </div>
+    </div>
+  </div>
 </template>
+
 <script>
-import {mapGetters, mapActions} from 'vuex';
-export default{
-    name:'todos',
-    methods:{
-        ...mapActions(['fetchTodos','deleteTodo'])
-    },
-    computed: mapGetters (['allTodos']),
-    created(){
-        this.fetchTodos();
+import { mapGetters, mapActions } from "vuex";
+export default {
+  name: "Todos",
+  methods: {
+    ...mapActions(["fetchTodos", "deleteTodo", "updateTodo"]),
+    onDblClick(todo) {
+      const updTodo = {
+        id: todo.id,
+        title: todo.title,
+        completed: !todo.completed
+      };
+      this.updateTodo(updTodo);
     }
-}
+  },
+  computed: mapGetters(["allTodos"]),
+  created() {
+    this.fetchTodos();
+  }
+};
 </script>
+
 <style scoped>
 .todos {
   display: grid;
@@ -69,5 +97,8 @@ i {
   .todos {
     grid-template-columns: 1fr;
   }
+}
+.shi{
+  margin-right: 20px;
 }
 </style>
